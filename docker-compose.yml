@@ -17,8 +17,7 @@ services:
       - SECRET_KEY=TLDRR5ABZOTLESS
       - FLASK_ENV=development
     command: >      
-      sh -c "flask --app manage db init &&
-      flask --app manage db migrate -m 'Initial migration' &&
+      sh -c "flask --app manage db migrate -m 'Initial migration' &&
       flask --app manage db upgrade &&
       gunicorn --bind 0.0.0.0:8000 manage:app"
  
