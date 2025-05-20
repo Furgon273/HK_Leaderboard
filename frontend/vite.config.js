@@ -10,12 +10,16 @@ export default defineConfig({
     }
   },
   server: {
+    host: true,
     proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
+      '/api/': {
+        target: 'http://web:8000',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/socket.io/': {
+        target: 'http://web:8000',
+        ws: true,
       }
     }
   }

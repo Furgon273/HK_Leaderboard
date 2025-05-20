@@ -8,7 +8,7 @@ export const useSocket = () => {
   const isConnected = ref(false)
   
   const connect = () => {
-    socket.value = io('http://localhost:5000', {
+    socket.value = io('http://web:8000', {
       auth: {
         token: authStore.token
       }

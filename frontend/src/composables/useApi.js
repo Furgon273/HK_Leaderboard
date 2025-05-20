@@ -3,7 +3,7 @@ import { useAuthStore } from '@/store/auth'
 
 export const useApi = () => {
   const authStore = useAuthStore()
-  const baseUrl = 'http://localhost:5000/api'
+  const baseUrl = '/api'
   const error = ref(null)
   const loading = ref(false)
 

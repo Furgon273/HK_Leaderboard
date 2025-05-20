@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./backend
+    # command: gunicorn --bind 0.0.0.0:5000 --workers 4 manage:app
+    volumes:
+      - ./backend:/app
+      - uploads:/app/uploads
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/hk_leaderboard
+      - SECRET_KEY=TLDRR5ABZOTLESS
+      - FLASK_ENV=development
+    command: >      
+      sh -c "flask --app manage db migrate -m 'Initial migration' &&
+      flask --app manage db upgrade &&
+      gunicorn --bind 0.0.0.0:8000 manage:app"
+ 
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - web
+  
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=hk_leaderboard
+    ports:
+      - "5433:5432"
+
+volumes:
+  postgres_data:
+  uploads:

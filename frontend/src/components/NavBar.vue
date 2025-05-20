@@ -4,7 +4,6 @@
     <v-spacer></v-spacer>
     
     <div class="nav-buttons">
-      <v-btn to="/" text class="nav-btn">Главная</v-btn>
       <v-btn to="/leaderboard" text class="nav-btn">Топ игроков</v-btn>
       <v-btn
           v-if="authStore.user?.role === 'admin'"
