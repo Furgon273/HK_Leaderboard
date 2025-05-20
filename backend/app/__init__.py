@@ -1,0 +1,29 @@
+from flask import Flask
+from .config import Config
+from .extensions import db, jwt, socketio, migrate
+from flask_cors import CORS
+
+def create_app(config_class=Config):
+    app = Flask(__name__)
+    app.config.from_object(config_class)
+    CORS(app, resources={
+        r"/api/*": {
+            "origins": "http://localhost:5173",
+            "supports_credentials": True,
+            "allow_headers": ["Content-Type", "Authorization"],
+            "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"]
+        }
+    })
+
+    
+    # Initialize extensions
+    db.init_app(app)
+    jwt.init_app(app)
+    socketio.init_app(app, cors_allowed_origins="*")
+    migrate.init_app(app, db)
+
+    # Register blueprints
+    from .routes import bp
+    app.register_blueprint(bp)
+
+    return app

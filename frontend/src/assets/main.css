@@ -1,0 +1,62 @@
+@import './base.css';
+
+html, body {
+  /* Set default background to dark and text to light for the whole page */
+  background-color: #121212;
+  color: #e0e0e0;
+}
+
+body {
+  /* Ensure text color is applied to body content */
+  color: #e0e0e0;
+}
+
+:root {
+  --bg-color: #1a1a1a; /* Darker background */
+  --card-bg: #2c2c2c; /* Slightly lighter for cards */
+  --text-color: #f0f0f0;     /* Lighter text */
+  --accent-color: #ffffff;   /* Bright blue accent */
+}
+#app {
+
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: var(--accent-color);
+  transition: 0.4s;
+  padding: 3px;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  } /* Keep a subtle hover effect */
+}
+
+@media (min-width: 1024px) {
+
+  #app {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 2rem;
+  }
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.v-main {
+  background-color: var(--bg-color);
+}
+
+/* Style for Vuetify Cards */
+.v-card {
+  background-color: var(--card-bg);
+  color: var(--text-color); /* Ensure text in cards is light */
+}
