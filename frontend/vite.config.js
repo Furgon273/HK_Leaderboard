@@ -11,7 +11,7 @@ export default defineConfig({
   },
   server: {
     host: true,
-    allowedHosts: ['hk.silaeder.codingprojects.ru'],
+    allowedHosts: ['marat.silaeder.codingprojects.ru'],
     proxy: {
       '/api/': {
         target: 'http://web:8000',
