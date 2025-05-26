@@ -9,6 +9,10 @@ import ProfileEditView from '@/views/ProfileEditView.vue'
 import AdminPanel from '@/views/AdminPanel.vue'
 import AddChallengeView from '@/views/AddChallengeView.vue'
 import ChallengeDetailView from '@/views/ChallengeDetailView.vue' // Import ChallengeDetailView
+import AddAchievementView from '@/views/AddAchievementView.vue'
+import AchievementDetailsView from '@/views/AchievementDetailsView.vue' // Import AchievementDetailsView
+import EditAchievementView from '@/views/EditAchievementView.vue' // Import EditAchievementView
+import LinkConfirmationView from '@/views/LinkConfirmationView.vue' // Import LinkConfirmationView
 import { useAuthStore } from '@/store/auth'; // Import useAuthStore
 
 const routes = [
@@ -37,6 +41,11 @@ const routes = [
     meta: { requiresAdmin: true }
   },
   {
+    path: '/add-achievement',
+    name: 'add-achievement',
+    component: AddAchievementView,
+  },
+  {
     path: '/admin/add-challenge',
     name: 'AddChallenge',
     component: AddChallengeView,
@@ -47,6 +56,21 @@ const routes = [
     name: 'ChallengeDetail',
     component: ChallengeDetailView,
   },
+  {
+    path: '/edit-achievement/:id',
+    name: 'EditAchievement',
+    component: EditAchievementView,
+  },
+  {
+    path: '/achievements/:id',
+    name: 'AchievementDetails',
+    component: AchievementDetailsView,
+  },
+  {
+    path: '/confirm-link',
+    name: 'ConfirmLink',
+    component: LinkConfirmationView,
+  }
 ]
 
 const router = createRouter({
@@ -62,7 +86,7 @@ export const setupRouter = (app) => {
 
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
       next('/login')
-    } else if (to.meta.requiresAdmin && (!authStore.user || authStore.user.role !== 'admin')) {
+    } else if (to.meta.requiresAdmin && (!authStore.user || (!authStore.user.is_admin && !authStore.user.is_super_admin))) {
       // If route requires admin and user is not logged in or not admin
       next('/') // Redirect to home or a forbidden page
     } else {

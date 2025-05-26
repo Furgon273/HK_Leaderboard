@@ -8,7 +8,7 @@ services:
       - ./backend:/app
       - uploads:/app/uploads
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -17,14 +17,14 @@ services:
       - SECRET_KEY=TLDRR5ABZOTLESS
       - FLASK_ENV=development
     command: >      
-      sh -c "flask --app manage db migrate -m 'Initial migration' &&
+      sh -c "flask --app manage db migrate -m "migration" &&
       flask --app manage db upgrade &&
       gunicorn --bind 0.0.0.0:8000 manage:app"
  
   frontend:
     build: ./frontend
     ports:
-      - "5173:5173"
+      - "127.0.0.1:5173:5173"
     depends_on:
       - web
   

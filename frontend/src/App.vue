@@ -10,5 +10,10 @@
 <script setup>
 import NavBar from '@/components/NavBar.vue'
 </script>
-<style scoped>
+<style>
+#app {
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+}
 </style>

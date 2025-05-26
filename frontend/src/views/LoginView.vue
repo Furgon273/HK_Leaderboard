@@ -1,45 +1,41 @@
 <template>
   <v-container class="fill-height">
-    <v-row justify="center">
-      <v-col cols="12" sm="8" md="6" lg="4">
-        <v-card class="pa-4">
-          <v-card-title class="text-center">Вход</v-card-title>
-          <v-card-text>
-            <v-alert
-              v-if="loginError"
-              type="error"
-              class="mb-4"
-            >
-              {{ loginError }}
-            </v-alert>
-            <v-form @submit.prevent="handleLogin">
-              <v-text-field
-                v-model="username"
-                label="Никнейм"
-                required
-              ></v-text-field>
-              
-              <v-text-field
-                v-model="password"
-                label="Пароль"
-                type="password"
-                required
-              ></v-text-field>
-              
-              <v-btn 
-                type="submit" 
-                color="primary" 
-                block 
-                :loading="loading"
-                size="large"
-              >
-                Войти
-              </v-btn>
-            </v-form>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+    <v-card class="pa-4">
+      <v-card-title class="text-center">Вход</v-card-title>
+      <v-card-text>
+        <v-alert
+          v-if="loginError"
+          type="error"
+          class="mb-4"
+        >
+          {{ loginError }}
+        </v-alert>
+        <v-form @submit.prevent="handleLogin">
+          <v-text-field
+            v-model="username"
+            label="Никнейм"
+            required
+          ></v-text-field>
+          
+          <v-text-field
+            v-model="password"
+            label="Пароль"
+            type="password"
+            required
+          ></v-text-field>
+          
+          <v-btn 
+            type="submit" 
+            color="primary" 
+            block 
+            :loading="loading"
+            size="large"
+          >
+            Войти
+          </v-btn>
+        </v-form>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
@@ -84,9 +80,13 @@ const handleLogin = async () => {
 <style scoped>
   .v-card {
     background-color: var(--color-background);
+    width: 300px;
   }
   .v-text-field {
     background-color: var(--color-background);
     color: var(--color-text);
+  }
+  .v-container {
+    width: 600%; 
   }
 </style>

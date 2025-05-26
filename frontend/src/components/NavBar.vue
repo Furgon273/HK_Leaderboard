@@ -20,7 +20,6 @@
       </template>
 
       <template v-else>
-        <v-btn to="/submit-run" text class="nav-btn">Добавить забег</v-btn>
         <v-btn :to="`/profile/${authStore.user.username}`" text class="nav-btn">
           <v-icon left>mdi-account</v-icon>
           {{ authStore.user.username }}

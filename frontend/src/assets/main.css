@@ -18,11 +18,12 @@ body {
   --accent-color: #ffffff;   /* Bright blue accent */
 }
 #app {
-
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 a,
@@ -43,7 +44,6 @@ a,
 
   #app {
     display: grid;
-    grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
   }
 }
@@ -53,6 +53,7 @@ body {
 }
 .v-main {
   background-color: var(--bg-color);
+  max-width: none;
 }
 
 /* Style for Vuetify Cards */

@@ -13,10 +13,8 @@
           <thead>
             <tr>
               <th>№</th>
-              <th>Ник</th>
-              <th>Лига</th>
-              <th>Макс. сложность</th>
-              <th>Забегов</th>
+              <th>Игрок</th>
+              <th>Достижения</th>
             </tr>
           </thead>
           <tbody>
@@ -28,19 +26,13 @@
                 </router-link>
               </td>
               <td>
-                <v-chip :color="getLeagueColor(player.league)">
-                  {{ player.league }}
-                </v-chip>
+                <router-link v-for="(ach, achIndex) in player.achievements" :key="ach.id" :to="`/achievements/${ach.id}`">
+                  {{ ach.title }}{{ achIndex < player.achievements.length - 1 ? ', ' : '' }}
+                </router-link>
               </td>
-              <td>{{ player.max_difficulty }}</td>
-              <td>{{ player.runs_count }}</td>
             </tr>
           </tbody>
-        </v-table>
-      </v-card-text>
-    </v-card>
-  </v-container>
-</template>
+        </v-table>      </v-card-text>    </v-card>  </v-container></template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -49,17 +41,6 @@ import { useApi } from '@/composables/useApi'
 const { fetchApi } = useApi()
 const leaderboard = ref([])
 const lastUpdated = ref(null)
-
-const getLeagueColor = (league) => {
-  const colors = {
-    bronze: 'brown',
-    silver: 'grey lighten-1',
-    gold: 'amber',
-    platinum: 'blue-grey',
-    diamond: 'cyan',
-  }
-  return colors[league.toLowerCase()] || 'primary'
-}
 
 onMounted(async () => {
   leaderboard.value = await fetchApi('/leaderboard')

@@ -21,7 +21,7 @@ export const useApi = () => {
         headers['Authorization'] = `Bearer ${authStore.token}`
       }
       
-      const response = await fetch(`${baseUrl}${endpoint}`, {
+      const response = await fetch(`${baseUrl}/${endpoint}`, {
         ...options,
         headers,
         credentials: 'include'  // Измените на 'include'
@@ -29,7 +29,7 @@ export const useApi = () => {
 
       const data = await response.json().catch(() => ({}));
       
-      if (!response.ok) {
+      if (!response.ok) { // Добавляем проверку на !response.ok здесь
         const errorData = data;
         // Вместо создания новой ошибки, выбрасываем объект с response и errorData
         const error = new Error(errorData.message || response.statusText);
@@ -39,13 +39,14 @@ export const useApi = () => {
       }
       return data;
     } catch (err) {
-      // error.value = err.message // Убираем присвоение reactive error.value здесь
       console.error("Error in fetchApi:", err); // Добавим для отладки в useApi
       throw err
     } finally {
       loading.value = false
     }
   }
-
-  return { fetchApi, error, loading }
+  
+  return {
+    fetchApi, error, loading
+  }
 }

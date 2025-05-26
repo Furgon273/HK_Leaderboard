@@ -1,6 +1,5 @@
 from app import create_app
 from app.extensions import socketio, db
-from app.models import User, UserProfile, Challenge, Run, Discussion, Comment
 
 app = create_app()
 

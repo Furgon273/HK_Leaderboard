@@ -1,64 +1,60 @@
 <template>
   <v-container class="fill-height">
-    <v-row justify="center">
-      <v-col cols="12" sm="8" md="6" lg="4">
-        <v-card class="pa-4">
-          <v-card-title class="text-center">Регистрация</v-card-title>
-          <v-card-text>
-            <v-form @submit.prevent="handleRegister">
-              <v-text-field
-                v-model="form.username"
-                label="Никнейм"
-                :error-messages="errors.username"
-                required
-                outlined
-              ></v-text-field>
-              
-              <v-text-field
-                v-model="form.email"
-                label="Email"
-                type="email"
-                :error-messages="errors.email"
-                required
-                outlined
-              ></v-text-field>
-              
-              <v-text-field
-                v-model="form.password"
-                label="Пароль"
-                type="password"
-                :error-messages="errors.password"
-                required
-                outlined
-              ></v-text-field>
-              
-              <v-text-field
-                v-model="form.password_confirmation"
-                label="Подтверждение пароля"
-                type="password"
-                :error-messages="errors.password_confirmation"
-                required
-                outlined
-              ></v-text-field>
-              
-              <v-btn 
-                type="submit" 
-                color="primary" 
-                block 
-                :loading="loading"
-                size="large"
-              >
-                Зарегистрироваться
-              </v-btn>
-              
-              <div class="text-center mt-4">
-                Уже есть аккаунт? <router-link to="/login">Войти</router-link>
-              </div>
-            </v-form>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+    <v-card class="pa-4">
+      <v-card-title class="text-center">Регистрация</v-card-title>
+      <v-card-text>
+        <v-form @submit.prevent="handleRegister">
+          <v-text-field
+            v-model="form.username"
+            label="Никнейм"
+            :error-messages="errors.username"
+            required
+            outlined
+          ></v-text-field>
+          
+          <v-text-field
+            v-model="form.email"
+            label="Email"
+            type="email"
+            :error-messages="errors.email"
+            required
+            outlined
+          ></v-text-field>
+          
+          <v-text-field
+            v-model="form.password"
+            label="Пароль"
+            type="password"
+            :error-messages="errors.password"
+            required
+            outlined
+          ></v-text-field>
+          
+          <v-text-field
+            v-model="form.password_confirmation"
+            label="Подтверждение пароля"
+            type="password"
+            :error-messages="errors.password_confirmation"
+            required
+            outlined
+          ></v-text-field>
+          
+          <v-btn 
+            type="submit" 
+            color="primary" 
+            block 
+            :loading="loading"
+            size="large"
+          >
+            Зарегистрироваться
+          </v-btn>
+          
+          <div class="text-center mt-4">
+            Уже есть аккаунт? <router-link to="/login">Войти</router-link>
+          </div>
+        </v-form>
+      </v-card-text>
+    </v-card>
   </v-container>
 </template>
 
