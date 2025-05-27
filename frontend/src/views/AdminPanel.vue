@@ -28,7 +28,7 @@
                   <tr v-for="achievement in achievements" :key="achievement.id">
                     <td>{{ achievement.id }}</td>
                     <td>
-                      <router-link :to="{ name: 'AchievementDetails', params: { id: achievement.id } }">{{ achievement.title }}</router-link>
+                      <router-link :to="{ name: 'AchievementDetails', params: { id: achievement.id } }">{{ truncateTitle(achievement.title) }}</router-link>
                     </td>
                     <td>{{ achievement.difficulty }}</td>
                     <td>{{ achievement.username }}</td>
@@ -99,7 +99,7 @@
                 <tbody>
                   <tr v-for="user in users" :key="user.id">
                     <td>{{ user.id }}</td>
-                    <td>{{ user.username }}</td>
+                    <td>{{ truncateTitle(user.username) }}</td>
                     <td>{{ user.is_super_admin ? 'супер-админ' : (user.role === 'admin' ? 'админ' : 'пользователь') }}</td>
                     <td v-if="authStore.user?.is_super_admin" class="action-buttons-cell">
                       <div class="action-buttons">
@@ -275,7 +275,7 @@ const toggleAdmin = async (user) => {
   console.log('toggleAdmin called with user:', user);
   if (!user) { console.error('User object is undefined in toggleAdmin'); return; }
   try {
-    const endpoint = user.role === 'admin' ? `users/${user.id}/demote` : `users/${user.id}/make_admin`;
+    const endpoint = user.role === 'admin' ? `/users/${user.id}/demote` : `/users/${user.id}/make_admin`;
     await fetchApi(endpoint, { method: 'POST' });
     await fetchUsers(); // Refresh the list
   } catch (error) {
@@ -285,6 +285,10 @@ const toggleAdmin = async (user) => {
 
 const editAchievement = async (achievementId) => {
  router.push({ name: 'EditAchievement', params: { id: achievementId } });
+};
+
+const truncateTitle = (title) => {
+  return title.length > 17 ? title.substring(0, 17) + '...' : title;
 };
 
 </script>
@@ -338,7 +342,7 @@ const editAchievement = async (achievementId) => {
 }
 
 /* Адаптация */
-@media (min-width: 1200px) {
+@media (min-width: 1500px) {
   .tables-container {
     grid-template-columns: 1fr 1fr;
   }

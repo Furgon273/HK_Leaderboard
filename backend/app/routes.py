@@ -194,6 +194,7 @@ def get_profile(username):
         "telegram": user.profile.telegram,
         "discord": user.profile.discord,
         "avatar": user.profile.avatar_url,
+        "league": user.league,
         "achievements": [{"id": ach.id, "title": ach.title, "description": ach.description, "difficulty": ach.difficulty, "is_confirmed": ach.is_confirmed, "is_pending": ach.is_pending, "rejected": ach.rejected} for ach in user.achievements],
         "discussions": [{
             "id": disc.id,
@@ -247,6 +248,7 @@ def get_leaderboard():
             # For example, summing up the difficulties of confirmed achievements
             total_difficulty = sum(ach.difficulty for ach in confirmed_achievements)
             ranked_users.append({
+                "league": user.league,
                 "username": user.username,
                 "score": total_difficulty, # Still include score for sorting or potential display
                 "achievements": achievement_list # Include the list of confirmed achievements
@@ -489,6 +491,8 @@ def submit_achievement():
             is_pending=True
         )
         db.session.add(new_achievement)
+        # Calculate and update user's league after adding the achievement
+        user.calculate_league()
         db.session.commit()
         return jsonify({"message": "Achievement submitted for review", "achievement_id": new_achievement.id}), 201
     except Exception as e:
@@ -505,6 +509,9 @@ def confirm_achievement(achievement_id):
         achievement.is_confirmed = True
         achievement.is_pending = False
         achievement.rejected = False
+
+        # Calculate and update user's league after confirming the achievement
+        achievement.user.calculate_league()
         db.session.commit()
         return jsonify({"message": "Achievement confirmed successfully"}), 200
     except Exception as e:
@@ -608,9 +615,23 @@ def update_achievement(achievement_id):
         achievement.rejected = False
 
         db.session.commit()
+
+        # Explicitly calculate and update the user's league after the achievement is updated
+        try:
+            achievement.user.calculate_league()
+            db.session.commit()
+        except Exception as league_e:
+            # Log the error and rollback the league update if it fails
+            db.session.rollback()
+            print(f"Error calculating league for user {user.username}: {league_e}")
+            # Return a specific error related to league calculation if needed, or the general update error
+            return jsonify({"message": "Achievement updated, but an error occurred while updating user league", "error": str(league_e)}), 500
+
         return jsonify({"message": "Achievement updated successfully"}), 200
     except Exception as e:
         db.session.rollback()
+        # Log the error for debugging
+        print(f"Error updating achievement {achievement_id}: {e}")
         return jsonify({"message": "An error occurred while updating achievement", "error": str(e)}), 500
 
 @bp.route('/api/achievements/<int:achievement_id>', methods=['DELETE'])
@@ -625,3 +646,19 @@ def delete_achievement(achievement_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"message": "An error occurred while deleting achievement", "error": str(e)}), 500
+
+@bp.route('/admin/update_leagues', methods=['POST'])
+@jwt_required()
+def update_leagues():
+    """Updates the league for all users based on their highest achievement difficulty (Super Admin only)."""
+    current_user_identity = get_jwt_identity()
+    requesting_user = User.query.filter_by(username=current_user_identity).first_or_404()
+
+    if not requesting_user or not requesting_user.is_super_admin:
+        return jsonify({"error": "Super admin access required"}), 403
+
+    users = User.query.all()
+    for user in users:
+        user.calculate_league()
+    db.session.commit()
+    return jsonify({"message": "Leagues updated successfully for all users"}), 200

@@ -1,6 +1,6 @@
 <template>
   <div class="add-achievement">
-    <h1>Add New Achievement</h1>
+    <h2>Add New Achievement</h2>
     <form @submit.prevent="submitAchievement">
       <div>
         <label for="title">Title:</label>
@@ -11,14 +11,16 @@
         <textarea id="description" v-model="achievement.description"></textarea>
       </div>
       <div>
-        <label for="difficulty">Difficulty (1-100):</label>
-        <input type="number" id="difficulty" v-model="achievement.difficulty" min="1" max="100" required>
+        <label for="difficulty">Difficulty:</label>
+        <input type="number" id="difficulty" v-model="achievement.difficulty" min="1" required>
       </div>
       <div>
         <label for="link">Link (Optional):</label>
         <input type="text" id="link" v-model="achievement.link">
       </div>
-      <button type="submit">Add Achievement</button>
+      <div>
+        <button type="submit">Add Achievement</button>
+      </div>
     </form>
   </div>
 </template>
@@ -52,8 +54,7 @@ export default {
           body: JSON.stringify(achievement.value),
         });
         console.log('Achievement added:', response); // Adjusted log based on fetchApi return
-        // Redirect to user profile after successful submission
-        // Assuming user ID can be retrieved or is available
+        // Redirect to user profile after successful submission\
         // For now, redirecting to a placeholder. You might need to adjust this
         // based on how you get the current user's ID in your frontend.
         const currentUserId = localStorage.getItem('user_id'); // Example: Get user ID from localStorage
@@ -74,9 +75,8 @@ export default {
 
 <style scoped>
 .add-achievement {
-  max-width: 600px;
-  margin: 0 auto;
   padding: 20px;
+  width: 100%;
 }
 
 .add-achievement div {

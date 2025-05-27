@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
       })
       
       token.value = data.access_token
-      user.value = { username: data.username, role: data.role, is_super_admin: data.is_super_admin } // Ensure is_super_admin is included
+      user.value = { username: data.username, role: data.role, is_admin: data.is_super_admin } // Ensure is_super_admin is included
       
       localStorage.setItem('token', data.access_token)
       localStorage.setItem('user', JSON.stringify(user.value))

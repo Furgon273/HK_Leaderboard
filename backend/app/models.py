@@ -11,12 +11,35 @@ class User(db.Model):
     is_super_admin = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     profile = db.relationship('UserProfile', backref='user', uselist=False, cascade='all, delete-orphan')
+    league = db.Column(db.String(20), default='Iron')
     achievements = db.relationship('Achievement', backref='user', lazy=True, cascade='all, delete-orphan')
     discussions = db.relationship('Discussion', backref='author', cascade='all, delete-orphan')
     comments = db.relationship('Comment', backref='author', cascade='all, delete-orphan')
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+
+    def calculate_league(self):
+        leagues = ['Iron', 'Bronze', 'Silver', 'Gold', 'Diamond', 'Void', 'Joker']
+        max_complexity = 0
+        confirmed_achievements = [ach.difficulty for ach in self.achievements if ach.is_confirmed]
+        if confirmed_achievements:
+            max_complexity = max(confirmed_achievements)
+
+        if max_complexity < 100:
+            self.league = 'Iron'
+        elif 100 <= max_complexity < 10000:
+            self.league = 'Bronze'
+        elif 10000 <= max_complexity < 1000000:
+            self.league = 'Silver'
+        elif 1000000 <= max_complexity < 100000000:
+            self.league = 'Gold'
+        elif 100000000 <= max_complexity < 10000000000:
+            self.league = 'Diamond'
+        elif 10000000000 <= max_complexity < 1000000000000:
+            self.league = 'Void'
+        else:
+            self.league = 'Joker'
 
 class UserProfile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -31,7 +54,7 @@ class Achievement(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     title = db.Column(db.String(128), nullable=False)
     description = db.Column(db.Text)
-    difficulty = db.Column(db.Integer, nullable=False) # Integer value from 1 to 100
+    difficulty = db.Column(db.BigInteger, nullable=False)
     link = db.Column(db.String(256)) # Link to proof
     is_confirmed = db.Column(db.Boolean, default=False) # Confirmed by administrator
     is_pending = db.Column(db.Boolean, default=True) # Awaiting confirmation

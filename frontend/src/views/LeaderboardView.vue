@@ -1,38 +1,41 @@
 <template>
-  <v-container>
-    <v-card>
-      <v-card-title class="d-flex justify-space-between align-center">
-        <span>Топ игроков</span>
-        <v-chip v-if="lastUpdated" color="info">
-          Обновлено: {{ lastUpdated.toLocaleTimeString() }}
-        </v-chip>
-      </v-card-title>
-      
-      <v-card-text>
-        <v-table>
-          <thead>
-            <tr>
-              <th>№</th>
-              <th>Игрок</th>
-              <th>Достижения</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(player, index) in leaderboard" :key="player.username">
-              <td>{{ index + 1 }}</td>
-              <td>
-                <router-link :to="`/profile/${player.username}`">
-                  {{ player.username }}
+  <v-container fluid class="pa-2 pa-sm-4">
+    <v-row justify="center">
+      <v-col cols="12">
+        <v-card>
+          <v-card-title class="d-flex flex-column flex-sm-row justify-space-between align-center">
+            <span class="text-h5 mb-2 mb-sm-0">Топ игроков</span>
+            <v-chip v-if="lastUpdated" color="info" small>
+              Обновлено: {{ lastUpdated.toLocaleTimeString() }}
+            </v-chip>
+          </v-card-title>
+
+          <v-card-text class="pa-0">
+            <v-data-table
+              :headers="headers"
+              :items="leaderboard"
+              :items-per-page="-1"
+              hide-default-footer            
+              class="elevation-1"
+              dense
+            >
+              <template v-slot:item.username="{ item }">
+                <router-link :to="`/profile/${item.username}`">
+                  {{ item.username }}
                 </router-link>
-              </td>
-              <td>
-                <router-link v-for="(ach, achIndex) in player.achievements" :key="ach.id" :to="`/achievements/${ach.id}`">
-                  {{ ach.title }}{{ achIndex < player.achievements.length - 1 ? ', ' : '' }}
+              </template>
+              <template v-slot:item.achievements="{ item }">
+                <router-link v-for="(ach, achIndex) in item.achievements" :key="ach.id" :to="`/achievements/${ach.id}`">
+                  {{ truncateTitle(ach.title) }}{{ achIndex < item.achievements.length - 1 ? ', ' : '' }}
                 </router-link>
-              </td>
-            </tr>
-          </tbody>
-        </v-table>      </v-card-text>    </v-card>  </v-container></template>
+              </template>
+            </v-data-table>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -42,8 +45,34 @@ const { fetchApi } = useApi()
 const leaderboard = ref([])
 const lastUpdated = ref(null)
 
+const headers = ref([
+  { title: '№', key: 'index', sortable: false },
+  { title: 'Игрок', key: 'username' },
+  { title: 'Лига', key: 'league' },
+  { title: 'Достижения', key: 'achievements', sortable: false },
+])
+
 onMounted(async () => {
-  leaderboard.value = await fetchApi('/leaderboard')
-  lastUpdated.value = new Date()
+  try {
+    const data = await fetchApi('/leaderboard')
+    // Add index to each item for the numbered column
+    leaderboard.value = data.map((item, index) => ({ ...item, index: index + 1 }));
+    lastUpdated.value = new Date()
+  } catch (error) {
+    console.error('Error fetching leaderboard:', error);
+    // Handle error, e.g., show an error message to the user
+  }
 })
+
+const truncateTitle = (title) => {
+  if (title.length > 17) {
+    return title.substring(0, 17) + '...'
+  }
+  return title
+}
 </script>
+
+<style scoped>
+/* You can add specific styles here if needed for further customization */
+/* For example, adjusting column widths for specific breakpoints */
+</style>

@@ -86,7 +86,7 @@ export const setupRouter = (app) => {
 
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
       next('/login')
-    } else if (to.meta.requiresAdmin && (!authStore.user || (!authStore.user.is_admin && !authStore.user.is_super_admin))) {
+    } else if (to.meta.requiresAdmin && (!authStore.user || (!authStore.user.role === "admin" && !authStore.user.is_super_admin))) {
       // If route requires admin and user is not logged in or not admin
       next('/') // Redirect to home or a forbidden page
     } else {
