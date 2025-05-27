@@ -46,6 +46,10 @@ def admin_required(fn):
 #     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
 #     return response
 
+@bp.route('/api/healthcheck')
+def healthcheck():
+    return jsonify({"status": "healthy"}), 200
+
 @bp.route('/api/users', methods=['GET'])
 @jwt_required()
 def get_users():

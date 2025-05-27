@@ -3,7 +3,7 @@ import { useAuthStore } from '@/store/auth'
 
 export const useApi = () => {
   const authStore = useAuthStore()
-  const baseUrl = '/api'
+  const baseUrl = '/api';
   const error = ref(null)
   const loading = ref(false)
 
@@ -20,8 +20,9 @@ export const useApi = () => {
       if (authStore.token) {
         headers['Authorization'] = `Bearer ${authStore.token}`
       }
-      
-      const response = await fetch(`${baseUrl}/${endpoint}`, {
+
+      console.log(baseUrl)      
+      const response = await fetch(`${baseUrl}${endpoint}`, {
         ...options,
         headers,
         credentials: 'include'  // Измените на 'include'

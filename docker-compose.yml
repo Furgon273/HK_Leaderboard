@@ -2,13 +2,15 @@ version: '3.8'
 
 services:
   web:
+    networks:
+      - app_net
     build: ./backend
     # command: gunicorn --bind 0.0.0.0:5000 --workers 4 manage:app
     volumes:
       - ./backend:/app
       - uploads:/app/uploads
     ports:
-      - "127.0.0.1:8000:8000"
+      - "1501:8000"
     depends_on:
       db:
         condition: service_healthy
@@ -17,18 +19,23 @@ services:
       - SECRET_KEY=TLDRR5ABZOTLESS
       - FLASK_ENV=development
     command: >      
-      sh -c "flask --app manage db migrate -m "migration" &&
+      sh -c "flask db init && 
+      flask --app manage db migrate -m "migration" &&
       flask --app manage db upgrade &&
       gunicorn --bind 0.0.0.0:8000 manage:app"
  
   frontend:
+    networks:
+      - app_net
     build: ./frontend
     ports:
-      - "127.0.0.1:5173:5173"
+      - "1502:5173"
     depends_on:
       - web
   
   db:
+    networks:
+      - app_net
     image: postgres:13
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -37,7 +44,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=hk_leaderboard
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:1503:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d hk_leaderboard"]
       interval: 5s
@@ -47,3 +54,7 @@ services:
 volumes:
   postgres_data:
   uploads:
+
+networks:
+  app_net:
+    driver: bridge
